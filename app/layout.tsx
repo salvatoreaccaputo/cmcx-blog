@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter, Lora } from 'next/font/google';
 import './globals.css';
+import { ParticleBackground } from './components/ParticleBackground';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans', display: 'swap' });
 const lora  = Lora({ subsets: ['latin'], variable: '--font-serif', display: 'swap' });
@@ -14,9 +15,29 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="de" className={`${inter.variable} ${lora.variable}`}>
       <body>
+        {/* ── Background: static glow blobs ──────────────────────── */}
+        <div
+          aria-hidden="true"
+          className="fixed inset-0 pointer-events-none"
+          style={{ zIndex: 0 }}
+        >
+          <div style={{
+            position: 'absolute', inset: 0,
+            background: [
+              'radial-gradient(ellipse 60% 55% at 12% 18%, rgba(110,40,200,0.22) 0%, transparent 60%)',
+              'radial-gradient(ellipse 50% 45% at 88% 75%, rgba(50,60,200,0.16) 0%, transparent 55%)',
+              'radial-gradient(ellipse 40% 35% at 65% 5%,  rgba(160,40,255,0.10) 0%, transparent 50%)',
+              'radial-gradient(ellipse 30% 30% at 35% 90%, rgba(80,30,180,0.12) 0%, transparent 50%)',
+            ].join(', '),
+          }} />
+        </div>
+
+        {/* ── Animated particle network ──────────────────────────── */}
+        <ParticleBackground />
+
         {/* ── Header ─────────────────────────────────────────────── */}
         <header
-          className="sticky top-0 z-50"
+          className="sticky top-0 z-50 relative"
           style={{
             background: 'rgba(9,9,11,0.85)',
             backdropFilter: 'blur(14px)',
@@ -64,10 +85,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </header>
 
         {/* ── Content ─────────────────────────────────────────────── */}
-        <main className="min-h-screen">{children}</main>
+        <main className="min-h-screen relative" style={{ zIndex: 1 }}>{children}</main>
 
         {/* ── Footer ──────────────────────────────────────────────── */}
-        <footer style={{ borderTop: '1px solid var(--color-border)', marginTop: 80 }}>
+        <footer className="relative" style={{ borderTop: '1px solid var(--color-border)', marginTop: 80, zIndex: 1 }}>
           <div className="max-w-5xl mx-auto px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-[13px]" style={{ color: 'var(--color-muted)' }}>
               Generiert mit CMCx · Content Orchestration Lab
