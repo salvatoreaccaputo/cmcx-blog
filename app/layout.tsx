@@ -91,7 +91,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <footer className="relative" style={{ borderTop: '1px solid var(--color-border)', marginTop: 80, zIndex: 1 }}>
           <div className="max-w-5xl mx-auto px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-[13px]" style={{ color: 'var(--color-muted)' }}>
-              Generiert mit CMCx · Content Orchestration Lab
+              RYZE Digital — Blog for all let&apos;s Rock!
             </p>
             <p className="text-[12px]" style={{ color: 'var(--color-subtle)' }}>
               {new Date().getFullYear()}
