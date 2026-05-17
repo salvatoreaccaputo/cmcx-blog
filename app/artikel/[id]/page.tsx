@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getBlogPost, getBlogPosts } from '../../../lib/supabase';
+import { ArticleSidebar } from '../../components/blog/ArticleSidebar';
 import type { Metadata } from 'next';
 
 export const revalidate = 60;
@@ -55,7 +56,10 @@ export default async function ArtikelPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const post = await getBlogPost(id);
+  const [post, allPosts] = await Promise.all([
+    getBlogPost(id),
+    getBlogPosts(),
+  ]);
   if (!post) notFound();
 
   return (
@@ -81,11 +85,17 @@ export default async function ArtikelPage({
         </div>
       )}
 
-      {/* ── Article container ───────────────────────────────── */}
+      {/* ── Two-column layout ───────────────────────────────── */}
       <div
-        className="max-w-2xl mx-auto px-6"
-        style={{ marginTop: post.image_url ? -80 : 60 }}
+        className="max-w-5xl mx-auto px-6 lg:grid lg:gap-10 lg:items-start"
+        style={{
+          marginTop: post.image_url ? -80 : 60,
+          gridTemplateColumns: '1fr 300px',
+        }}
       >
+
+      {/* ── Article column ──────────────────────────────────── */}
+      <div>
         {/* Back link */}
         <a
           href="/"
@@ -314,6 +324,11 @@ export default async function ArtikelPage({
             ← Zurück zur Übersicht
           </a>
         </div>
+      </div>
+
+      {/* ── Sidebar ─────────────────────────────────────────── */}
+      <ArticleSidebar posts={allPosts} currentId={post.id} />
+
       </div>
     </div>
   );
