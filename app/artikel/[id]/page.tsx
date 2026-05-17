@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getBlogPost, getBlogPosts } from '../../../lib/supabase';
 import { ArticleSidebar } from '../../components/blog/ArticleSidebar';
+import { BlogContent } from '../../components/blog/BlogContent';
 import type { Metadata } from 'next';
 
 export const revalidate = 60;
@@ -164,131 +165,7 @@ export default async function ArtikelPage({
         )}
 
         {/* ── Blog content ──────────────────────────────────── */}
-        {post.blog && (
-          <article
-            className="prose prose-lg max-w-none"
-            style={{ fontFamily: 'var(--font-serif)' }}
-          >
-            {post.blog.split('\n').map((line, i) => {
-              if (line.startsWith('# '))
-                return (
-                  <h1
-                    key={i}
-                    style={{
-                      fontFamily: 'var(--font-serif)',
-                      color: 'var(--color-ink)',
-                      fontSize: 28,
-                      fontWeight: 700,
-                      marginTop: 40,
-                      marginBottom: 12,
-                    }}
-                  >
-                    {line.slice(2)}
-                  </h1>
-                );
-              if (line.startsWith('## '))
-                return (
-                  <h2
-                    key={i}
-                    style={{
-                      fontFamily: 'var(--font-serif)',
-                      color: 'var(--color-ink)',
-                      fontSize: 22,
-                      fontWeight: 600,
-                      marginTop: 32,
-                      marginBottom: 10,
-                    }}
-                  >
-                    {line.slice(3)}
-                  </h2>
-                );
-              if (line.startsWith('### '))
-                return (
-                  <h3
-                    key={i}
-                    style={{
-                      fontFamily: 'var(--font-serif)',
-                      color: 'var(--color-ink)',
-                      fontSize: 18,
-                      fontWeight: 600,
-                      marginTop: 24,
-                      marginBottom: 8,
-                    }}
-                  >
-                    {line.slice(4)}
-                  </h3>
-                );
-
-              if (line.trim() === '---')
-                return (
-                  <hr
-                    key={i}
-                    style={{
-                      border: 'none',
-                      borderTop: '1px solid var(--color-border)',
-                      margin: '32px 0',
-                    }}
-                  />
-                );
-
-              if (line.startsWith('- ') || line.startsWith('* '))
-                return (
-                  <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 6 }}>
-                    <span
-                      style={{ color: 'var(--color-accent)', flexShrink: 0, marginTop: 2 }}
-                    >
-                      •
-                    </span>
-                    <span style={{ color: '#d4d4d8', fontSize: 16, lineHeight: 1.75 }}>
-                      {line.slice(2).replace(/\*\*(.+?)\*\*/g, (_, t) => t)}
-                    </span>
-                  </div>
-                );
-
-              if (line.startsWith('> '))
-                return (
-                  <blockquote
-                    key={i}
-                    style={{
-                      borderLeft: '3px solid var(--color-accent)',
-                      paddingLeft: 16,
-                      margin: '24px 0',
-                      fontStyle: 'italic',
-                      color: 'var(--color-muted)',
-                    }}
-                  >
-                    {line.slice(2)}
-                  </blockquote>
-                );
-
-              if (line.startsWith('**') && line.endsWith('**'))
-                return (
-                  <p
-                    key={i}
-                    style={{
-                      fontWeight: 700,
-                      color: 'var(--color-ink)',
-                      marginBottom: 8,
-                      fontSize: 16,
-                    }}
-                  >
-                    {line.slice(2, -2)}
-                  </p>
-                );
-
-              if (!line.trim()) return <div key={i} style={{ height: 12 }} />;
-
-              return (
-                <p
-                  key={i}
-                  style={{ color: '#d4d4d8', fontSize: 16, lineHeight: 1.8, marginBottom: 10 }}
-                >
-                  {line.replace(/\*\*(.+?)\*\*/g, (_, t) => t)}
-                </p>
-              );
-            })}
-          </article>
-        )}
+        {post.blog && <BlogContent content={post.blog} />}
 
         {/* ── AI badge ─────────────────────────────────────── */}
         <div

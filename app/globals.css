@@ -71,6 +71,12 @@
   box-shadow: 0 20px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(249,115,22,0.07);
 }
 
+/* ── FAQ accordion chevron ──────────────────────────────────── */
+details[open] .faq-chevron {
+  transform: rotate(180deg);
+}
+details summary::-webkit-details-marker { display: none; }
+
 /* ── Line clamp ──────────────────────────────────────────────── */
 .line-clamp-2 {
   display: -webkit-box;
