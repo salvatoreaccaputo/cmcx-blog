@@ -89,7 +89,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         {/* ── Footer ──────────────────────────────────────────────── */}
         <footer className="relative" style={{ borderTop: '1px solid var(--color-border)', marginTop: 80, zIndex: 1 }}>
-          <div className="max-w-5xl mx-auto px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="max-w-5xl mx-auto px-6 py-10 flex flex-col items-center justify-center gap-2 text-center">
             <p className="text-[13px]" style={{ color: 'var(--color-muted)' }}>
               RYZE Digital — Blog for all let&apos;s Rock!
             </p>
