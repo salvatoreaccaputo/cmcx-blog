@@ -5,7 +5,7 @@ import { ArticleSidebar } from '../../components/blog/ArticleSidebar';
 import { BlogContent } from '../../components/blog/BlogContent';
 import type { Metadata } from 'next';
 
-export const revalidate = 60;
+export const revalidate = 10;
 
 /* ── Generate static paths at build time ───────────────────── */
 export async function generateStaticParams() {
