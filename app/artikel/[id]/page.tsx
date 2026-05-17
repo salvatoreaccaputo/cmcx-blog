@@ -146,23 +146,11 @@ export default async function ArtikelPage({
           {post.title}
         </h1>
 
-        {/* Idea teaser */}
-        {post.idea && (
-          <div
-            className="rounded-xl p-5 mb-10 border-l-4 relative z-10"
-            style={{
-              background: 'rgba(249,115,22,0.07)',
-              borderColor: 'var(--color-accent)',
-            }}
-          >
-            <p
-              className="text-[14px] font-medium italic"
-              style={{ color: 'var(--color-accent)' }}
-            >
-              „{post.idea}"
-            </p>
-          </div>
-        )}
+        {/* Divider */}
+        <hr
+          className="mb-10 relative z-10"
+          style={{ borderColor: 'rgba(255,255,255,0.1)', borderTopWidth: 1 }}
+        />
 
         {/* ── Blog content ──────────────────────────────────── */}
         {post.blog && <BlogContent content={post.blog} />}
