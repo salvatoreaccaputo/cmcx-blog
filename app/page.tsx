@@ -1,10 +1,11 @@
 import { getBlogPosts } from '../lib/supabase';
+import type { Campaign } from '../lib/supabase';
 import { BlogListing } from './components/blog/BlogListing';
 
 export const revalidate = 60;
 
 export default async function HomePage() {
-  let posts = [];
+  let posts: Campaign[] = [];
   let fetchError: string | null = null;
 
   try {
