@@ -13,15 +13,20 @@ import path from 'path';
 // ── Load env ──────────────────────────────────────────────────────────────
 const env = readFileSync(new URL('../.env.local', import.meta.url).pathname, 'utf8');
 const SUPABASE_URL = env.match(/NEXT_PUBLIC_SUPABASE_URL=(.*)/)[1].trim();
-const SUPABASE_KEY = env.match(/NEXT_PUBLIC_SUPABASE_ANON_KEY=(.*)/)[1].trim();
+const SUPABASE_ANON_KEY = env.match(/NEXT_PUBLIC_SUPABASE_ANON_KEY=(.*)/)[1].trim();
 
 const cmcxEnv = readFileSync(new URL('../../cmcx/.env.local', import.meta.url).pathname, 'utf8');
 const OPENAI_KEY = cmcxEnv.match(/OPENAI_API_KEY=(.*)/)[1].trim();
+const SERVICE_KEY = cmcxEnv.match(/SUPABASE_SERVICE_ROLE_KEY=(.*)/)?.[1]?.trim();
+const SUPABASE_KEY = SERVICE_KEY || SUPABASE_ANON_KEY;
 
-// ── Use OpenAI SDK from cmcx node_modules ────────────────────────────────
-const require = createRequire(import.meta.url);
+console.log('Storage Key:', SERVICE_KEY ? 'SERVICE_ROLE_KEY ✓' : 'ANON_KEY (kein Service-Key)');
+
+
+// ── Load SDKs from cmcx node_modules ─────────────────────────────────────
+const cjsRequire = createRequire(import.meta.url);
 const cmcxDir = path.resolve(fileURLToPath(import.meta.url), '../../../cmcx');
-const OpenAI = require(path.join(cmcxDir, 'node_modules/openai'));
+const OpenAI = cjsRequire(path.join(cmcxDir, 'node_modules/openai'));
 const openai = new OpenAI.default({ apiKey: OPENAI_KEY });
 
 // ── Helpers ───────────────────────────────────────────────────────────────
@@ -70,6 +75,21 @@ async function supabasePatch(id, payload) {
     req.write(data);
     req.end();
   });
+}
+
+// ── Supabase SDK for Storage uploads ─────────────────────────────────────
+const supabaseModule = cjsRequire(path.join(cmcxDir, 'node_modules/@supabase/supabase-js'));
+const { createClient } = supabaseModule;
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: false } });
+
+async function uploadToSupabase(buffer, postId) {
+  const filename = `blog-${postId.slice(0, 8)}-${Date.now()}.png`;
+  const { error } = await supabase.storage
+    .from('blog-images')
+    .upload(filename, buffer, { contentType: 'image/png', upsert: true });
+  if (error) throw new Error(`Supabase upload: ${error.message}`);
+  const { data } = supabase.storage.from('blog-images').getPublicUrl(filename);
+  return data.publicUrl;
 }
 
 function saveLocally(buffer, postId) {
@@ -169,9 +189,16 @@ async function main() {
       const { buffer, revisedPrompt } = await generateImage(dallePrompt);
       console.log(`  Image buffer: ${buffer.length} bytes`);
 
-      console.log('  → Saving image locally...');
-      const publicUrl = saveLocally(buffer, post.id);
-      console.log(`  Saved as: ${publicUrl}`);
+      let publicUrl;
+      try {
+        console.log('  → Uploading to Supabase Storage...');
+        publicUrl = await uploadToSupabase(buffer, post.id);
+        console.log(`  Supabase URL: ${publicUrl}`);
+      } catch (uploadErr) {
+        console.warn(`  Supabase upload fehlgeschlagen (${uploadErr.message}), speichere lokal...`);
+        publicUrl = saveLocally(buffer, post.id);
+        console.log(`  Lokal gespeichert: ${publicUrl}`);
+      }
 
       console.log('  → Updating database...');
       const patchRes = await supabasePatch(post.id, {
