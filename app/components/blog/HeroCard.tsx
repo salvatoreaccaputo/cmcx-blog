@@ -25,136 +25,109 @@ function excerpt(text: string | null, max = 200) {
 
 export function HeroCard({ post }: { post: Campaign }) {
   return (
-    <a href={`/artikel/${post.id}`} className="group block no-underline h-full">
+    <a href={`/artikel/${post.id}`} className="group block no-underline">
       <article
-        className="card-hover relative rounded-2xl overflow-hidden h-full flex flex-col"
+        className="card-hover rounded-xl overflow-hidden flex flex-col xl:flex-row"
         style={{
           background: 'var(--color-surface)',
           border: '1px solid var(--color-border)',
-          minHeight: 420,
         }}
       >
-        {/* Background */}
-        {post.image_url ? (
-          <div className="absolute inset-0">
+        {/* Image — full-width on mobile, left 60% on xl */}
+        <div
+          className="xl:w-[60%] overflow-hidden flex-shrink-0"
+          style={{ minHeight: 300 }}
+        >
+          {post.image_url ? (
             <Image
               src={post.image_url}
               alt={post.title}
-              fill
-              className="object-cover"
+              width={1200}
+              height={800}
+              className="w-full object-cover transition-transform duration-700 group-hover:scale-105"
+              style={{ height: '100%', minHeight: 300, display: 'block' }}
               priority
+              sizes="(max-width: 1280px) 100vw, 60vw"
             />
-            {/* Gradient overlay — dark at bottom for text legibility */}
+          ) : (
             <div
-              className="absolute inset-0"
+              className="w-full flex items-center justify-center"
               style={{
-                background:
-                  'linear-gradient(to top, rgba(9,9,11,0.97) 0%, rgba(9,9,11,0.65) 45%, rgba(9,9,11,0.15) 100%)',
-              }}
-            />
-          </div>
-        ) : (
-          <div className="absolute inset-0" style={{ background: 'var(--color-surface)' }}>
-            {/* Abstract ambient light — decorative */}
-            <div
-              className="absolute inset-0"
-              style={{
-                backgroundImage:
-                  'radial-gradient(ellipse at 20% 60%, rgba(249,115,22,0.18) 0%, transparent 55%), radial-gradient(ellipse at 80% 20%, rgba(99,102,241,0.14) 0%, transparent 50%)',
-              }}
-            />
-            <div
-              className="absolute inset-0 opacity-[0.03]"
-              style={{
-                backgroundImage:
-                  'repeating-linear-gradient(0deg, transparent, transparent 30px, rgba(255,255,255,0.5) 30px, rgba(255,255,255,0.5) 31px)',
-              }}
-            />
-          </div>
-        )}
-
-        {/* Content layer */}
-        <div className="relative flex flex-col h-full p-7 pt-6">
-          {/* Top row: badges */}
-          <div className="flex items-start justify-between gap-2">
-            <span className="tag">Neuester Artikel</span>
-            <span
-              className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full"
-              style={{
-                background: 'rgba(255,255,255,0.1)',
-                color: 'rgba(255,255,255,0.75)',
-                backdropFilter: 'blur(8px)',
-                WebkitBackdropFilter: 'blur(8px)',
+                minHeight: 300,
+                height: '100%',
+                background: 'linear-gradient(135deg, var(--color-accent-glow), var(--color-surface-2))',
               }}
             >
-              {post.language === 'de' ? 'DE' : 'EN'}
+              <svg width="56" height="56" viewBox="0 0 56 56" fill="none" opacity={0.25}>
+                <rect x="8" y="12" width="40" height="5" rx="2.5" fill="var(--color-primary)" />
+                <rect x="8" y="22" width="28" height="4" rx="2" fill="var(--color-primary)" />
+                <rect x="8" y="30" width="34" height="4" rx="2" fill="var(--color-primary)" />
+                <rect x="8" y="38" width="22" height="4" rx="2" fill="var(--color-primary)" />
+              </svg>
+            </div>
+          )}
+        </div>
+
+        {/* Text — right 40% on xl */}
+        <div className="xl:w-[40%] p-7 flex flex-col justify-center gap-4">
+          {/* Label row */}
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="label-caps" style={{ color: 'var(--color-primary)' }}>
+              {post.tone ?? 'Artikel'}
+            </span>
+            <span className="label-caps" style={{ color: 'var(--color-subtle)' }}>
+              · {formatDate(post.created_at)}
             </span>
           </div>
 
-          {/* Spacer pushes text to bottom */}
-          <div className="flex-1" />
+          {/* Title */}
+          <h1
+            className="leading-tight"
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(22px, 3vw, 32px)',
+              fontWeight: 800,
+              color: 'var(--color-primary)',
+              letterSpacing: '-0.02em',
+            }}
+          >
+            {post.title}
+          </h1>
 
-          {/* Bottom: editorial text block */}
-          <div>
-            {/* Tone chip */}
-            {post.tone && (
-              <p
-                className="text-[11px] font-semibold uppercase tracking-widest mb-2"
-                style={{ color: 'var(--color-accent)' }}
-              >
-                {post.tone}
-              </p>
-            )}
+          {/* Excerpt */}
+          <p
+            className="text-[16px] leading-relaxed line-clamp-3"
+            style={{ color: 'var(--color-muted)' }}
+          >
+            {excerpt(post.blog)}
+          </p>
 
-            {/* Title */}
-            <h2
-              className="text-[28px] sm:text-[32px] font-bold leading-tight mb-3 group-hover:text-orange-400 transition-colors"
-              style={{ fontFamily: 'var(--font-serif)', color: '#fff' }}
+          {/* CTA */}
+          <div className="flex items-center justify-between mt-2">
+            <span
+              className="inline-flex items-center gap-1.5 text-[14px] font-bold transition-opacity group-hover:opacity-70"
+              style={{ color: 'var(--color-primary)' }}
             >
-              {post.title}
-            </h2>
-
-            {/* Excerpt */}
-            <p
-              className="text-[14px] leading-relaxed line-clamp-2 mb-5"
-              style={{ color: 'rgba(255,255,255,0.6)' }}
-            >
-              {excerpt(post.blog)}
-            </p>
-
-            {/* Footer row */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <time
-                  className="text-[12px]"
-                  style={{ color: 'rgba(255,255,255,0.4)' }}
-                >
-                  {formatDate(post.created_at)}
-                </time>
-                <span style={{ color: 'rgba(255,255,255,0.2)' }}>·</span>
-                <span
-                  className="text-[12px]"
-                  style={{ color: 'rgba(255,255,255,0.4)' }}
-                >
-                  {readingTime(post.blog)} Lesezeit
-                </span>
-              </div>
-              <span
-                className="flex items-center gap-1 text-[13px] font-semibold"
-                style={{ color: 'var(--color-accent)' }}
+              Weiterlesen
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                className="transition-transform group-hover:translate-x-1"
               >
-                Weiterlesen
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path
-                    d="M3 7h8M7.5 4l3.5 3-3.5 3"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </span>
-            </div>
+                <path
+                  d="M3 8h10M9 5l3 3-3 3"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
+            <span className="label-caps" style={{ color: 'var(--color-subtle)' }}>
+              {readingTime(post.blog)} Lesezeit
+            </span>
           </div>
         </div>
       </article>

@@ -2,20 +2,35 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --font-sans: 'Inter', system-ui, sans-serif;
-  --font-serif: 'Lora', Georgia, serif;
+  /* ── Fonts ─────────────────────────────────────────────────── */
+  --font-sans:    'Inter',         system-ui, sans-serif;
+  --font-display: 'Manrope',       system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
 
-  --color-bg:         #08080f;
-  --color-paper:      #08080f;
-  --color-surface:    #10101a;
-  --color-surface-2:  #1a1a28;
-  --color-ink:        #f4f4f5;
-  --color-muted:      #a1a1aa;
-  --color-subtle:     #52525b;
-  --color-accent:     #f97316;
-  --color-accent-dim: rgba(249,115,22,0.12);
-  --color-border:     rgba(255,255,255,0.08);
-  --color-card:       #111113;
+  /* ── Color palette (Stitch: Modern Light Blog) ─────────────── */
+  --color-bg:                  #FFFFFF;
+  --color-surface:             #F1F5F9;
+  --color-surface-2:           #eceef0;
+  --color-surface-high:        #e6e8ea;
+  --color-ink:                 #0F172A;
+  --color-muted:               #64748B;
+  --color-subtle:              #94a3b8;
+  --color-primary:             #003441;
+  --color-primary-container:   #0f4c5c;
+  --color-on-primary:          #ffffff;
+  --color-secondary:           #496177;
+  --color-tertiary:            #003630;
+  --color-tertiary-container:  #004f46;
+  --color-teal:                #34c8b5;
+  --color-teal-dim:            #4fdbc8;
+  --color-accent-glow:         #CCFBF1;
+  --color-border:              #c0c8cb;
+  --color-border-subtle:       rgba(0,0,0,0.06);
+  --color-card:                #FFFFFF;
+
+  /* legacy aliases */
+  --color-accent:              #003441;
+  --color-accent-dim:          rgba(0,52,65,0.08);
 }
 
 @layer base {
@@ -33,49 +48,64 @@
   }
 }
 
-/* ── Prose (dark) ────────────────────────────────────────────── */
+/* ── Prose (light) ────────────────────────────────────────────── */
 .prose {
-  --tw-prose-body:          #d4d4d8;
-  --tw-prose-headings:      #f4f4f5;
-  --tw-prose-links:         #f97316;
-  --tw-prose-bold:          #f4f4f5;
-  --tw-prose-quotes:        #a1a1aa;
-  --tw-prose-quote-borders: #f97316;
-  --tw-prose-code:          #d4d4d8;
-  --tw-prose-pre-bg:        #1c1c1f;
-  --tw-prose-hr:            rgba(255,255,255,0.08);
+  --tw-prose-body:          #334155;
+  --tw-prose-headings:      #0F172A;
+  --tw-prose-links:         #003441;
+  --tw-prose-bold:          #0F172A;
+  --tw-prose-quotes:        #64748B;
+  --tw-prose-quote-borders: #003441;
+  --tw-prose-code:          #0F172A;
+  --tw-prose-pre-bg:        #F1F5F9;
+  --tw-prose-hr:            #c0c8cb;
 }
 
-/* ── Tag badge ───────────────────────────────────────────────── */
-.tag {
-  display: inline-flex;
-  align-items: center;
-  padding: 2px 10px;
-  border-radius: 999px;
+/* ── Label-caps (JetBrains Mono style) ───────────────────────── */
+.label-caps {
+  font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-accent);
-  background: var(--color-accent-dim);
-  border: 1px solid rgba(249,115,22,0.2);
+}
+
+/* ── AI indicator dot ────────────────────────────────────────── */
+.ai-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #34c8b5;
+  box-shadow: 0 0 8px rgba(52, 200, 181, 0.55);
+  flex-shrink: 0;
 }
 
 /* ── Card hover ──────────────────────────────────────────────── */
 .card-hover {
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.08);
 }
 .card-hover:hover {
-  transform: translateY(-3px);
-  border-color: rgba(255,255,255,0.16) !important;
-  box-shadow: 0 20px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(249,115,22,0.07);
+  transform: translateY(-2px);
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.10);
 }
 
-/* ── FAQ accordion chevron ──────────────────────────────────── */
-details[open] .faq-chevron {
-  transform: rotate(180deg);
+/* ── Tag / tone badge ────────────────────────────────────────── */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-secondary);
+  background: rgba(73, 97, 119, 0.08);
+  border: 1px solid rgba(73, 97, 119, 0.15);
 }
-details summary::-webkit-details-marker { display: none; }
 
 /* ── Line clamp ──────────────────────────────────────────────── */
 .line-clamp-2 {

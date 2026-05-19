@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { getBlogPosts } from '../lib/supabase';
 import type { Campaign } from '../lib/supabase';
 import { BlogListing } from './components/blog/BlogListing';
@@ -15,56 +16,102 @@ export default async function HomePage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-14">
+    <div>
+      {/* ── Hero stage ───────────────────────────────────────────── */}
+      <section
+        className="w-full"
+        style={{ background: 'var(--color-surface)', borderBottom: '1px solid var(--color-border)' }}
+      >
+        <div
+          className="mx-auto flex flex-col px-6 pt-8 pb-2"
+          style={{ maxWidth: 1200 }}
+        >
+          {/* Teaser image — full width */}
+          <div
+            className="w-full overflow-hidden"
+            style={{
+              borderRadius: 16,
+              border: '1px solid rgba(0,0,0,0.18)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.08)',
+            }}
+          >
+            <Image
+              src="/blog-teaser.png"
+              alt="New Kid on the Blog – Teaser"
+              width={1280}
+              height={720}
+              className="w-full h-auto object-cover"
+              style={{ display: 'block' }}
+              priority
+            />
+          </div>
 
-      {/* ── Page header ──────────────────────────────────────────── */}
-      <div className="mb-12">
-        <p
-          className="text-[11px] font-bold uppercase tracking-[0.18em] mb-3"
-          style={{ color: 'var(--color-accent)' }}
-        >
-          Content Orchestration Lab
-        </p>
-        <h1
-          className="text-[44px] sm:text-[56px] font-bold leading-[1.05] mb-4"
-          style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-ink)' }}
-        >
-          Alle Artikel
-        </h1>
-        <p className="text-[16px]" style={{ color: 'var(--color-muted)' }}>
-          KI-generierter Content · automatisch veröffentlicht
-        </p>
-      </div>
+          {/* Intro text — below image */}
+          <div className="py-10 flex flex-col gap-5">
+            <p className="label-caps" style={{ color: 'var(--color-teal)' }}>
+              Willkommen
+            </p>
+            <h2
+              className="leading-tight"
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(24px, 3vw, 34px)',
+                fontWeight: 800,
+                color: 'var(--color-primary)',
+                letterSpacing: '-0.02em',
+              }}
+            >
+              Willkommen bei „New Kid on the Blog"
+            </h2>
+            <div className="flex flex-col gap-4" style={{ color: '#334155', fontSize: 16, lineHeight: 1.8 }}>
+              <p>
+                Hier geht es um KI-Tools, Automationen und praktische Workflows: verständlich, direkt und mit Blick darauf, was im Alltag wirklich funktioniert.
+              </p>
+              <p>
+                Dieser Blog ist zugleich Showcase und Experiment. Er zeigt, wie KI Inhalte, Prozesse und Ideen unterstützen kann — nicht nur theoretisch, sondern praktisch im Einsatz.
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="ai-dot" />
+              <span className="label-caps" style={{ color: 'var(--color-muted)' }}>
+                KI-generierter Content · automatisch veröffentlicht
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    <div className="mx-auto px-6 py-12" style={{ maxWidth: 1200 }}>
 
       {/* ── Error state ──────────────────────────────────────────── */}
       {fetchError && (
         <div
           className="rounded-xl p-5 mb-10"
           style={{
-            background: 'rgba(239,68,68,0.08)',
-            border: '1px solid rgba(239,68,68,0.2)',
+            background: 'rgba(186,26,26,0.06)',
+            border: '1px solid rgba(186,26,26,0.2)',
           }}
         >
-          <p className="text-[14px]" style={{ color: '#f87171' }}>
+          <p className="text-[14px]" style={{ color: '#ba1a1a' }}>
             Artikel konnten nicht geladen werden: {fetchError}
           </p>
         </div>
       )}
 
-      {/* ── Empty state (no posts at all) ────────────────────────── */}
+      {/* ── Empty state ──────────────────────────────────────────── */}
       {!fetchError && posts.length === 0 && (
         <div
-          className="rounded-2xl p-16 text-center"
+          className="rounded-xl p-16 text-center"
           style={{ border: '1px solid var(--color-border)', background: 'var(--color-surface)' }}
         >
           <div
             className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4"
-            style={{ background: 'var(--color-accent-dim)' }}
+            style={{ background: 'rgba(0,52,65,0.08)' }}
           >
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
               <path
                 d="M10 5v6M10 13v2"
-                stroke="#f97316"
+                stroke="var(--color-primary)"
                 strokeWidth="1.8"
                 strokeLinecap="round"
               />
@@ -72,7 +119,7 @@ export default async function HomePage() {
           </div>
           <h2
             className="text-[18px] font-semibold mb-2"
-            style={{ color: 'var(--color-ink)' }}
+            style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
           >
             Noch keine Artikel vorhanden
           </h2>
@@ -84,8 +131,8 @@ export default async function HomePage() {
             href="http://localhost:3000"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-[13px] font-semibold no-underline transition-opacity hover:opacity-80"
-            style={{ background: 'var(--color-accent)', color: '#fff' }}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-semibold no-underline transition-opacity hover:opacity-80"
+            style={{ background: 'var(--color-primary)', color: '#fff' }}
           >
             CMCx Tool öffnen →
           </a>
@@ -95,16 +142,16 @@ export default async function HomePage() {
       {/* ── Blog listing ─────────────────────────────────────────── */}
       {!fetchError && posts.length > 0 && <BlogListing posts={posts} />}
 
-      {/* ── Auto-refresh hint ────────────────────────────────────── */}
+      {/* ── Count hint ───────────────────────────────────────────── */}
       {posts.length > 0 && (
         <p
-          className="text-center text-[11px] mt-16"
+          className="text-center label-caps mt-16"
           style={{ color: 'var(--color-subtle)' }}
         >
-          Aktualisiert sich automatisch · {posts.length}{' '}
-          {posts.length === 1 ? 'Artikel' : 'Artikel'} verfügbar
+          Aktualisiert sich automatisch · {posts.length} Artikel verfügbar
         </p>
       )}
+    </div>
     </div>
   );
 }

@@ -32,9 +32,9 @@ export function LanguageFilter({ languages, selected, onChange }: Props) {
             className="text-[12px] font-semibold px-3.5 py-1.5 rounded-full transition-all duration-150 cursor-pointer"
             style={
               isActive
-                ? { background: 'var(--color-accent)', color: '#fff', border: '1px solid transparent' }
+                ? { background: 'var(--color-primary)', color: '#fff', border: '1px solid transparent' }
                 : {
-                    background: 'rgba(255,255,255,0.05)',
+                    background: 'var(--color-surface)',
                     color: 'var(--color-muted)',
                     border: '1px solid var(--color-border)',
                   }

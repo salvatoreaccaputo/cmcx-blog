@@ -75,12 +75,12 @@ export default async function ArtikelPage({
             className="object-cover"
             priority
           />
-          {/* Gradient fades into dark background */}
+          {/* Gradient fades into light background */}
           <div
             className="absolute inset-0"
             style={{
               background:
-                'linear-gradient(to top, rgba(9,9,11,1) 0%, rgba(9,9,11,0.35) 55%, transparent 100%)',
+                'linear-gradient(to top, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.2) 50%, transparent 100%)',
             }}
           />
         </div>
@@ -128,10 +128,10 @@ export default async function ArtikelPage({
             {readingTime(post.blog)} Lesezeit
           </span>
           <span
-            className="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full"
+            className="label-caps px-2.5 py-0.5 rounded-full"
             style={{
-              background: 'rgba(255,255,255,0.07)',
-              color: 'var(--color-muted)',
+              background: 'rgba(0,52,65,0.08)',
+              color: 'var(--color-secondary)',
             }}
           >
             {post.language === 'de' ? 'DE' : 'EN'}
@@ -141,7 +141,7 @@ export default async function ArtikelPage({
         {/* Title */}
         <h1
           className="text-[34px] sm:text-[40px] font-bold leading-tight mb-6 relative z-10"
-          style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-ink)' }}
+          style={{ fontFamily: 'var(--font-display)', color: 'var(--color-primary)', letterSpacing: '-0.02em' }}
         >
           {post.title}
         </h1>
@@ -149,7 +149,7 @@ export default async function ArtikelPage({
         {/* Divider */}
         <hr
           className="mb-10 relative z-10"
-          style={{ borderColor: 'rgba(255,255,255,0.1)', borderTopWidth: 1 }}
+          style={{ borderColor: 'var(--color-border)', borderTopWidth: 1 }}
         />
 
         {/* ── Blog content ──────────────────────────────────── */}
@@ -165,7 +165,7 @@ export default async function ArtikelPage({
         >
           <div
             className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-white text-xs font-black"
-            style={{ background: 'linear-gradient(135deg, #f97316, #ea580c)' }}
+            style={{ background: 'var(--color-primary)' }}
           >
             AI
           </div>

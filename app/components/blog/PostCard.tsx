@@ -29,84 +29,68 @@ export function PostCard({ post }: { post: Campaign }) {
       <article
         className="card-hover h-full flex flex-col rounded-xl overflow-hidden"
         style={{
-          background: 'var(--color-surface)',
+          background: 'var(--color-card)',
           border: '1px solid var(--color-border)',
         }}
       >
         {/* Thumbnail */}
         {post.image_url ? (
-          <div className="relative flex-shrink-0" style={{ height: 158 }}>
+          <div className="relative flex-shrink-0 overflow-hidden" style={{ height: 192 }}>
             <Image
               src={post.image_url}
               alt={post.title}
               fill
-              className="object-cover"
-            />
-            <div
-              className="absolute inset-0"
-              style={{ background: 'rgba(0,0,0,0.22)' }}
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
           </div>
         ) : (
           <div
             className="flex-shrink-0 flex items-center justify-center"
             style={{
-              height: 96,
-              background:
-                'linear-gradient(135deg, rgba(249,115,22,0.07), rgba(99,102,241,0.07))',
+              height: 120,
+              background: 'linear-gradient(135deg, var(--color-accent-glow), var(--color-surface-2))',
             }}
           >
-            {/* Abstract document icon */}
-            <svg width="26" height="26" viewBox="0 0 26 26" fill="none" opacity={0.35}>
-              <rect x="3" y="4" width="20" height="2.5" rx="1.25" fill="#f97316" />
-              <rect x="3" y="10" width="14" height="2" rx="1" fill="#f97316" />
-              <rect x="3" y="15" width="17" height="2" rx="1" fill="#f97316" />
-              <rect x="3" y="20" width="11" height="2" rx="1" fill="#f97316" />
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" opacity={0.3}>
+              <rect x="3" y="5" width="22" height="3" rx="1.5" fill="var(--color-primary)" />
+              <rect x="3" y="11" width="16" height="2.5" rx="1.25" fill="var(--color-primary)" />
+              <rect x="3" y="16" width="19" height="2.5" rx="1.25" fill="var(--color-primary)" />
+              <rect x="3" y="21" width="12" height="2.5" rx="1.25" fill="var(--color-primary)" />
             </svg>
           </div>
         )}
 
         {/* Body */}
         <div className="flex flex-col flex-1 p-4 gap-3">
-          {/* Top row: tone tag + language chip */}
-          <div className="flex items-center justify-between gap-2">
-            {post.tone && <span className="tag truncate max-w-[120px]">{post.tone}</span>}
-            <span
-              className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full flex-shrink-0"
-              style={{
-                background: 'rgba(255,255,255,0.06)',
-                color: 'var(--color-muted)',
-              }}
-            >
-              {post.language === 'de' ? 'DE' : 'EN'}
+          {/* Tone label */}
+          {post.tone && (
+            <span className="label-caps" style={{ color: 'var(--color-secondary)' }}>
+              {post.tone}
             </span>
-          </div>
+          )}
 
           {/* Title */}
           <h3
-            className="text-[15px] font-semibold leading-snug group-hover:text-orange-400 transition-colors"
-            style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-ink)' }}
+            className="text-[15px] font-semibold leading-snug transition-colors group-hover:opacity-80"
+            style={{ fontFamily: 'var(--font-display)', color: 'var(--color-primary)' }}
           >
             {post.title}
           </h3>
 
           {/* Excerpt */}
           <p
-            className="text-[12px] leading-relaxed line-clamp-3 flex-1"
+            className="text-[13px] leading-relaxed line-clamp-3 flex-1"
             style={{ color: 'var(--color-muted)' }}
           >
             {excerpt(post.blog)}
           </p>
 
           {/* Footer */}
-          <div
-            className="flex items-center justify-between pt-3 mt-auto"
-            style={{ borderTop: '1px solid var(--color-border)' }}
-          >
-            <time className="text-[11px]" style={{ color: 'var(--color-subtle)' }}>
+          <div className="flex items-center justify-between pt-3 mt-auto" style={{ borderTop: '1px solid var(--color-border)' }}>
+            <time className="label-caps" style={{ color: 'var(--color-subtle)' }}>
               {formatDate(post.created_at)}
             </time>
-            <span className="text-[11px]" style={{ color: 'var(--color-subtle)' }}>
+            <span className="label-caps" style={{ color: 'var(--color-subtle)' }}>
               {readingTime(post.blog)} Lesezeit
             </span>
           </div>
