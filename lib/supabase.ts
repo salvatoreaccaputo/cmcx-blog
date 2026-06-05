@@ -7,25 +7,27 @@ export const supabase = createClient(url, key);
 
 /* ── Campaign type (read-only subset for the blog) ─────────── */
 export interface Campaign {
-  id:           string;
-  created_at:   string;
-  updated_at:   string;
-  title:        string;
-  idea:         string;
-  tone:         string;
-  language:     string;
-  channels:     string[];
-  blog:         string | null;
-  blog_structure: string | null;
-  image_url:    string | null;
-  image_prompt: string | null;
+  id:              string;
+  created_at:      string;
+  updated_at:      string;
+  title:           string;
+  idea:            string;
+  tone:            string;
+  language:        string;
+  channels:        string[];
+  blog:            string | null;
+  blog_structure:  string | null;
+  image_url:       string | null;
+  image_prompt:    string | null;
+  expert_name:     string | null;
+  expert_image_url: string | null;
 }
 
 /** Returns only campaigns that have blog content */
 export async function getBlogPosts(): Promise<Campaign[]> {
   const { data, error } = await supabase
     .from('campaigns')
-    .select('id, created_at, updated_at, title, idea, tone, language, channels, blog, blog_structure, image_url, image_prompt')
+    .select('id, created_at, updated_at, title, idea, tone, language, channels, blog, blog_structure, image_url, image_prompt, expert_name, expert_image_url')
     .not('blog', 'is', null)
     .order('created_at', { ascending: false });
 
@@ -36,7 +38,7 @@ export async function getBlogPosts(): Promise<Campaign[]> {
 export async function getBlogPost(id: string): Promise<Campaign | null> {
   const { data, error } = await supabase
     .from('campaigns')
-    .select('id, created_at, updated_at, title, idea, tone, language, channels, blog, blog_structure, image_url, image_prompt')
+    .select('id, created_at, updated_at, title, idea, tone, language, channels, blog, blog_structure, image_url, image_prompt, expert_name, expert_image_url')
     .eq('id', id)
     .not('blog', 'is', null)
     .single();

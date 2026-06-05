@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { getBlogPost, getBlogPosts } from '../../../lib/supabase';
 import { ArticleSidebar } from '../../components/blog/ArticleSidebar';
 import { BlogContent } from '../../components/blog/BlogContent';
+import { ExpertCTA } from '../../components/blog/ExpertCTA';
 import type { Metadata } from 'next';
 
 export const revalidate = 10;
@@ -154,6 +155,15 @@ export default async function ArtikelPage({
 
         {/* ── Blog content ──────────────────────────────────── */}
         {post.blog && <BlogContent content={post.blog} />}
+
+        {/* ── Expert CTA ──────────────────────────────────── */}
+        {post.expert_name && post.expert_image_url && (
+          <ExpertCTA
+            expertName={post.expert_name}
+            expertImageUrl={post.expert_image_url}
+            topic={post.title}
+          />
+        )}
 
         {/* ── AI badge ─────────────────────────────────────── */}
         <div
