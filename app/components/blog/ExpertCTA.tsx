@@ -7,6 +7,10 @@ interface ExpertCTAProps {
 }
 
 export function ExpertCTA({ expertName, expertImageUrl, topic }: ExpertCTAProps) {
+  /* expertName may contain "Name\nShortTopic" — split and use both */
+  const lines = expertName.split('\n').map((l) => l.trim()).filter(Boolean);
+  const displayName = lines[0] ?? expertName;
+  const shortTopic = lines[1] ?? topic;
   return (
     <div
       style={{
@@ -76,10 +80,10 @@ export function ExpertCTA({ expertName, expertImageUrl, topic }: ExpertCTAProps)
               marginBottom: 8,
             }}
           >
-            {expertName}
+            {displayName}
           </p>
           <p style={{ fontSize: 16, color: 'var(--color-muted)', lineHeight: 1.5 }}>
-            Experte für <em>{topic}</em>
+            Experte für <strong style={{ color: 'var(--color-secondary)' }}>{shortTopic}</strong>
           </p>
         </div>
 
