@@ -1,3 +1,5 @@
+'use client';
+
 interface ExpertCTAProps {
   expertName: string;
   expertImageUrl: string;
