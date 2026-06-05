@@ -68,14 +68,17 @@ function parseBlocks(content: string): Block[] {
 }
 
 /* ── Render ─────────────────────────────────────────────────── */
-export function BlogContent({ content }: { content: string }) {
+export function BlogContent({ content, skipFirstH1 = true }: { content: string; skipFirstH1?: boolean }) {
   const blocks = parseBlocks(content);
+  let firstH1Seen = false;
 
   return (
     <article className="max-w-none" style={{ fontFamily: 'var(--font-sans)' }}>
       {blocks.map((block, i) => {
         switch (block.type) {
-          case 'h1':
+          case 'h1': {
+            /* Skip the first H1 — it duplicates the page title shown above */
+            if (skipFirstH1 && !firstH1Seen) { firstH1Seen = true; return null; }
             return (
               <h1 key={i} style={{
                 fontFamily: 'var(--font-display)',
@@ -87,6 +90,7 @@ export function BlogContent({ content }: { content: string }) {
                 {block.text}
               </h1>
             );
+          }
           case 'h2':
             return (
               <h2 key={i} style={{
