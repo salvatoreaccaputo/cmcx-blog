@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter, Manrope, JetBrains_Mono } from 'next/font/google';
+import Image from 'next/image';
 import './globals.css';
 
 const inter = Inter({
@@ -45,24 +46,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             style={{ maxWidth: 1200 }}
           >
             {/* Logo */}
-            <a href="/" className="flex items-start gap-2 no-underline">
-              <div className="flex flex-col gap-0">
-                <div className="flex items-center gap-2">
-                  <span
-                    className="font-extrabold leading-tight"
-                    style={{ fontFamily: 'var(--font-display)', color: 'var(--color-primary)', fontSize: 18 }}
-                  >
-                    NKOTB – New Kid on the Blog
-                  </span>
-                  <div className="ai-dot" />
-                </div>
-                <span
-                  className="leading-tight"
-                  style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-muted)', fontSize: 12 }}
-                >
-                  Ich blogge mir die Welt, widdewidde wie sie mir gefällt!
-                </span>
-              </div>
+            <a href="/" className="flex items-center gap-3 no-underline">
+              <Image
+                src="/ryze-horizontal.png"
+                alt="RYZE Digital"
+                width={180}
+                height={22}
+                style={{ objectFit: 'contain', filter: 'brightness(0)' }}
+                priority
+              />
+              <div className="ai-dot" />
             </a>
 
             {/* Nav */}
@@ -110,12 +103,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             style={{ maxWidth: 1200 }}
           >
             <div className="flex flex-col gap-1 items-center md:items-start">
-              <span
-                className="font-extrabold text-[16px]"
-                style={{ fontFamily: 'var(--font-display)', color: 'var(--color-primary)' }}
-              >
-                NKOTB – New Kid on the Blog
-              </span>
+              <Image
+                src="/ryze-horizontal.png"
+                alt="RYZE Digital"
+                width={120}
+                height={15}
+                style={{ objectFit: 'contain', filter: 'brightness(0)', opacity: 0.6 }}
+              />
               <p className="text-[12px]" style={{ color: 'var(--color-muted)' }}>
                 © {new Date().getFullYear()} · KI-generierte Inhalte.
               </p>
