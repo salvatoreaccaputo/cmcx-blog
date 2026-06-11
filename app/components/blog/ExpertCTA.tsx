@@ -36,8 +36,8 @@ export function ExpertCTA({ expertName, expertImageUrl, topic }: ExpertCTAProps)
         <div style={{ position: 'relative', flexShrink: 0 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={expertImageUrl}
-            alt={expertName}
+            src={imageUrl}
+            alt={displayName}
             style={{
               width: 160,
               height: 160,
