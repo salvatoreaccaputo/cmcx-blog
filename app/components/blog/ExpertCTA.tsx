@@ -1,16 +1,23 @@
 'use client';
 
+const FALLBACK_IMAGE = '/expert-fallback.jpg';
+const FALLBACK_NAME = 'Prof. Dr. Content';
+const FALLBACK_TOPIC = 'Digitale Strategie';
+
 interface ExpertCTAProps {
-  expertName: string;
-  expertImageUrl: string;
+  expertName?: string | null;
+  expertImageUrl?: string | null;
   topic: string;
 }
 
 export function ExpertCTA({ expertName, expertImageUrl, topic }: ExpertCTAProps) {
+  const rawName = expertName ?? FALLBACK_NAME;
+  const imageUrl = expertImageUrl ?? FALLBACK_IMAGE;
+
   /* expertName may contain "Name\nShortTopic" — split and use both */
-  const lines = expertName.split('\n').map((l) => l.trim()).filter(Boolean);
-  const displayName = lines[0] ?? expertName;
-  const shortTopic = lines[1] ?? topic;
+  const lines = rawName.split('\n').map((l) => l.trim()).filter(Boolean);
+  const displayName = lines[0] ?? FALLBACK_NAME;
+  const shortTopic = lines[1] ?? (expertName ? topic : FALLBACK_TOPIC);
   return (
     <div
       style={{

@@ -156,14 +156,12 @@ export default async function ArtikelPage({
         {/* ── Blog content ──────────────────────────────────── */}
         {post.blog && <BlogContent content={post.blog} />}
 
-        {/* ── Expert CTA ──────────────────────────────────── */}
-        {post.expert_name && post.expert_image_url && (
-          <ExpertCTA
-            expertName={post.expert_name}
-            expertImageUrl={post.expert_image_url}
-            topic={post.title}
-          />
-        )}
+        {/* ── Expert CTA (always shown, falls back to default expert) ── */}
+        <ExpertCTA
+          expertName={post.expert_name}
+          expertImageUrl={post.expert_image_url}
+          topic={post.title}
+        />
 
         {/* ── AI badge ─────────────────────────────────────── */}
         <div
