@@ -58,7 +58,15 @@ function parseBlocks(content: string): Block[] {
     if (line.startsWith('### ')) { blocks.push({ type: 'h3', text: line.slice(4).trim() }); i++; continue; }
     if (line.trim() === '---')   { blocks.push({ type: 'hr' }); i++; continue; }
     if (line.startsWith('- ') || line.startsWith('* ')) { blocks.push({ type: 'li', text: line.slice(2) }); i++; continue; }
-    if (line.startsWith('> '))   { blocks.push({ type: 'blockquote', text: line.slice(2) }); i++; continue; }
+    if (line.startsWith('> ')) {
+      const quoteLines: string[] = [];
+      while (i < lines.length && lines[i].startsWith('> ')) {
+        quoteLines.push(lines[i].slice(2));
+        i++;
+      }
+      blocks.push({ type: 'blockquote', text: quoteLines.join('\n') });
+      continue;
+    }
     if (!line.trim())            { blocks.push({ type: 'blank' }); i++; continue; }
     blocks.push({ type: 'p', text: line });
     i++;
@@ -127,18 +135,65 @@ export function BlogContent({ content, skipFirstH1 = true }: { content: string; 
                 </span>
               </div>
             );
-          case 'blockquote':
+          case 'blockquote': {
+            const qLines = block.text.split('\n');
+            const authorIdx = qLines.findIndex((l) => l.trim().startsWith('—') || l.trim().startsWith('–'));
+            const quoteText = (authorIdx >= 0 ? qLines.slice(0, authorIdx) : qLines).join(' ').trim();
+            const author = authorIdx >= 0 ? qLines[authorIdx].replace(/^[—–]\s*/, '').trim() : null;
             return (
-              <blockquote key={i} style={{
-                borderLeft: '3px solid var(--color-primary)',
-                paddingLeft: 16,
-                margin: '24px 0',
-                fontStyle: 'italic',
-                color: 'var(--color-secondary)',
-              }}>
-                {block.text}
-              </blockquote>
+              <figure
+                key={i}
+                style={{
+                  margin: '32px 0',
+                  padding: 0,
+                  borderRadius: 12,
+                  overflow: 'hidden',
+                  border: '1px solid rgba(0,52,65,0.12)',
+                  background: 'linear-gradient(135deg, rgba(0,52,65,0.03) 0%, rgba(8,145,178,0.04) 100%)',
+                }}
+              >
+                <div style={{
+                  height: 3,
+                  background: 'linear-gradient(90deg, var(--color-primary), var(--color-secondary))',
+                }} />
+                <div style={{ padding: '24px 28px' }}>
+                  <p style={{
+                    fontSize: 11,
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.12em',
+                    color: 'var(--color-secondary)',
+                    marginBottom: 12,
+                  }}>
+                    Zitat
+                  </p>
+                  <blockquote style={{
+                    margin: 0,
+                    padding: 0,
+                    fontSize: 20,
+                    fontWeight: 500,
+                    fontStyle: 'italic',
+                    lineHeight: 1.6,
+                    color: 'var(--color-primary)',
+                  }}>
+                    &bdquo;{quoteText}&ldquo;
+                  </blockquote>
+                  {author && (
+                    <p style={{
+                      marginTop: 14,
+                      fontSize: 14,
+                      fontStyle: 'italic',
+                      color: 'var(--color-muted)',
+                    }}>
+                      — {/^(transcript\s*speaker|speaker|unknown|unbekannt)$/i.test(author)
+                        ? 'Zitat aus Recherche'
+                        : author}
+                    </p>
+                  )}
+                </div>
+              </figure>
             );
+          }
           case 'blank':
             return <div key={i} style={{ height: 12 }} />;
           case 'p':
