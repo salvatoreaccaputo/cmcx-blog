@@ -1,18 +1,7 @@
 import Image from 'next/image';
 import type { Campaign } from '../../../lib/supabase';
-
-function readingTime(text: string | null) {
-  if (!text) return '1 Min.';
-  return `${Math.max(1, Math.round(text.trim().split(/\s+/).length / 200))} Min.`;
-}
-
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString('de-DE', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-  });
-}
+import { BLOG_COPY, contentLanguage, formatLocalizedDate, readingMinutes } from '../../../lib/i18n';
+import { AiImageBadge } from '../ui/AiImageBadge';
 
 function excerpt(text: string | null, max = 200) {
   if (!text) return '';
@@ -24,6 +13,7 @@ function excerpt(text: string | null, max = 200) {
 }
 
 export function HeroCard({ post }: { post: Campaign }) {
+  const copy = BLOG_COPY[contentLanguage(post.language)];
   return (
     <a href={`/artikel/${post.id}`} className="group block no-underline">
       <article
@@ -35,20 +25,23 @@ export function HeroCard({ post }: { post: Campaign }) {
       >
         {/* Image — full-width on mobile, left 60% on xl */}
         <div
-          className="xl:w-[60%] overflow-hidden flex-shrink-0"
+          className="relative xl:w-[60%] overflow-hidden flex-shrink-0"
           style={{ minHeight: 300 }}
         >
           {post.image_url ? (
-            <Image
-              src={post.image_url}
-              alt={post.title}
-              width={1200}
-              height={800}
-              className="w-full object-cover transition-transform duration-700 group-hover:scale-105"
-              style={{ height: '100%', minHeight: 300, display: 'block' }}
-              priority
-              sizes="(max-width: 1280px) 100vw, 60vw"
-            />
+            <>
+              <Image
+                src={post.image_url}
+                alt={post.title}
+                width={1200}
+                height={800}
+                className="w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                style={{ height: '100%', minHeight: 300, display: 'block' }}
+                priority
+                sizes="(max-width: 1280px) 100vw, 60vw"
+              />
+              <AiImageBadge label={copy.aiGenerated} />
+            </>
           ) : (
             <div
               className="w-full flex items-center justify-center"
@@ -76,7 +69,7 @@ export function HeroCard({ post }: { post: Campaign }) {
               {post.tone ?? 'Artikel'}
             </span>
             <span className="label-caps" style={{ color: 'var(--color-subtle)' }}>
-              · {formatDate(post.created_at)}
+              · {formatLocalizedDate(post.created_at, post.language)}
             </span>
           </div>
 
@@ -108,7 +101,7 @@ export function HeroCard({ post }: { post: Campaign }) {
               className="inline-flex items-center gap-1.5 text-[14px] font-bold transition-opacity group-hover:opacity-70"
               style={{ color: 'var(--color-primary)' }}
             >
-              Weiterlesen
+              {copy.readMore}
               <svg
                 width="16"
                 height="16"
@@ -126,7 +119,7 @@ export function HeroCard({ post }: { post: Campaign }) {
               </svg>
             </span>
             <span className="label-caps" style={{ color: 'var(--color-subtle)' }}>
-              {readingTime(post.blog)} Lesezeit
+              {readingMinutes(post.blog)} {copy.minutesRead}
             </span>
           </div>
         </div>

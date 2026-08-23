@@ -1,18 +1,7 @@
 import Image from 'next/image';
 import type { Campaign } from '../../../lib/supabase';
-
-function readingTime(text: string | null) {
-  if (!text) return '1 Min.';
-  return `${Math.max(1, Math.round(text.trim().split(/\s+/).length / 200))} Min.`;
-}
-
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString('de-DE', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  });
-}
+import { BLOG_COPY, contentLanguage, formatLocalizedDate, readingMinutes } from '../../../lib/i18n';
+import { AiImageBadge } from '../ui/AiImageBadge';
 
 function excerpt(text: string | null, max = 115) {
   if (!text) return '';
@@ -24,6 +13,7 @@ function excerpt(text: string | null, max = 115) {
 }
 
 export function PostCard({ post }: { post: Campaign }) {
+  const copy = BLOG_COPY[contentLanguage(post.language)];
   return (
     <a href={`/artikel/${post.id}`} className="group block no-underline h-full">
       <article
@@ -42,6 +32,7 @@ export function PostCard({ post }: { post: Campaign }) {
               fill
               className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
+            <AiImageBadge label={copy.aiGenerated} />
           </div>
         ) : (
           <div
@@ -88,10 +79,10 @@ export function PostCard({ post }: { post: Campaign }) {
           {/* Footer */}
           <div className="flex items-center justify-between pt-3 mt-auto" style={{ borderTop: '1px solid var(--color-border)' }}>
             <time className="label-caps" style={{ color: 'var(--color-subtle)' }}>
-              {formatDate(post.created_at)}
+              {formatLocalizedDate(post.created_at, post.language, 'short')}
             </time>
             <span className="label-caps" style={{ color: 'var(--color-subtle)' }}>
-              {readingTime(post.blog)} Lesezeit
+              {readingMinutes(post.blog)} {copy.minutesRead}
             </span>
           </div>
         </div>

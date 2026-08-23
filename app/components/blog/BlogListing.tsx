@@ -5,6 +5,7 @@ import type { Campaign } from '../../../lib/supabase';
 import { HeroCard } from './HeroCard';
 import { PostCard } from './PostCard';
 import { LanguageFilter } from './LanguageFilter';
+import { contentLanguage, LANGUAGE_META } from '../../../lib/i18n';
 
 export function BlogListing({ posts }: { posts: Campaign[] }) {
   const [selectedLang, setSelectedLang] = useState('all');
@@ -30,7 +31,7 @@ export function BlogListing({ posts }: { posts: Campaign[] }) {
           <p className="label-caps" style={{ color: 'var(--color-subtle)' }}>
             {filtered.length} {filtered.length === 1 ? 'Artikel' : 'Artikel'}
             {selectedLang !== 'all' && (
-              <> auf {selectedLang === 'de' ? 'Deutsch' : 'Englisch'}</>
+              <> auf {LANGUAGE_META[contentLanguage(selectedLang)].label}</>
             )}
           </p>
           {languages.length > 1 && (

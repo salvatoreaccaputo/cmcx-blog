@@ -5,6 +5,8 @@ import { ArticleSidebar } from '../../components/blog/ArticleSidebar';
 import { BlogContent } from '../../components/blog/BlogContent';
 import { ExpertCTA } from '../../components/blog/ExpertCTA';
 import type { Metadata } from 'next';
+import { BLOG_COPY, contentLanguage, formatLocalizedDate, LANGUAGE_META, readingMinutes } from '../../../lib/i18n';
+import { AiImageBadge } from '../../components/ui/AiImageBadge';
 
 export const revalidate = 10;
 
@@ -38,19 +40,6 @@ export async function generateMetadata({
   };
 }
 
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString('de-DE', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-  });
-}
-
-function readingTime(text: string | null) {
-  if (!text) return '1 Min.';
-  return `${Math.max(1, Math.round(text.trim().split(/\s+/).length / 200))} Min.`;
-}
-
 /* ── Page ─────────────────────────────────────────────────── */
 export default async function ArtikelPage({
   params,
@@ -63,9 +52,12 @@ export default async function ArtikelPage({
     getBlogPosts(),
   ]);
   if (!post) notFound();
+  const language = contentLanguage(post.language);
+  const copy = BLOG_COPY[language];
+  const languageMeta = LANGUAGE_META[language];
 
   return (
-    <div>
+    <div lang={language}>
       {/* ── Hero image ───────────────────────────────────────── */}
       {post.image_url && (
         <div className="relative w-full" style={{ height: 420 }}>
@@ -76,6 +68,7 @@ export default async function ArtikelPage({
             className="object-cover"
             priority
           />
+          <AiImageBadge label={copy.aiGenerated} />
           {/* Gradient fades into light background */}
           <div
             className="absolute inset-0"
@@ -113,7 +106,7 @@ export default async function ArtikelPage({
               strokeLinejoin="round"
             />
           </svg>
-          Alle Artikel
+          {copy.allArticles}
         </a>
 
         {/* Meta badges */}
@@ -122,11 +115,11 @@ export default async function ArtikelPage({
             <span className="tag">{post.tone}</span>
           )}
           <time className="text-[12px]" style={{ color: 'var(--color-muted)' }}>
-            {formatDate(post.created_at)}
+            {formatLocalizedDate(post.created_at, post.language)}
           </time>
           <span style={{ color: 'var(--color-subtle)' }}>·</span>
           <span className="text-[12px]" style={{ color: 'var(--color-muted)' }}>
-            {readingTime(post.blog)} Lesezeit
+            {readingMinutes(post.blog)} {copy.minutesRead}
           </span>
           <span
             className="label-caps px-2.5 py-0.5 rounded-full"
@@ -135,7 +128,7 @@ export default async function ArtikelPage({
               color: 'var(--color-secondary)',
             }}
           >
-            {post.language === 'de' ? 'DE' : 'EN'}
+            {languageMeta.code}
           </span>
         </div>
 
@@ -154,13 +147,14 @@ export default async function ArtikelPage({
         />
 
         {/* ── Blog content ──────────────────────────────────── */}
-        {post.blog && <BlogContent content={post.blog} />}
+        {post.blog && <BlogContent content={post.blog} language={post.language} />}
 
         {/* ── Expert CTA (always shown, falls back to default expert) ── */}
         <ExpertCTA
           expertName={post.expert_name}
           expertImageUrl={post.expert_image_url}
           topic={post.title}
+          language={post.language}
         />
 
         {/* ── AI badge ─────────────────────────────────────── */}
@@ -179,10 +173,10 @@ export default async function ArtikelPage({
           </div>
           <div>
             <p className="text-[13px] font-semibold" style={{ color: 'var(--color-ink)' }}>
-              KI-generierter Inhalt
+              {copy.generatedContent}
             </p>
             <p className="text-[12px]" style={{ color: 'var(--color-muted)' }}>
-              Erstellt mit dem CMCx Content Orchestration Tool · GPT-4o
+              {copy.generatedWith} · GPT-4o
             </p>
           </div>
         </div>
@@ -194,13 +188,13 @@ export default async function ArtikelPage({
             className="inline-flex items-center gap-2 text-[13px] font-semibold no-underline px-4 py-2 rounded-lg transition-opacity hover:opacity-80"
             style={{ background: 'var(--color-accent)', color: '#fff' }}
           >
-            ← Zurück zur Übersicht
+            ← {copy.backOverview}
           </a>
         </div>
       </div>
 
       {/* ── Sidebar ─────────────────────────────────────────── */}
-      <ArticleSidebar posts={allPosts} currentId={post.id} />
+      <ArticleSidebar posts={allPosts} currentId={post.id} language={post.language} />
 
       </div>
     </div>

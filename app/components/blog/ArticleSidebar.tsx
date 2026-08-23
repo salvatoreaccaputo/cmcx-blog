@@ -1,26 +1,16 @@
 import Image from 'next/image';
 import type { Campaign } from '../../../lib/supabase';
-
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString('de-DE', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  });
-}
-
-function readingTime(text: string | null) {
-  if (!text) return '1 Min.';
-  return `${Math.max(1, Math.round(text.trim().split(/\s+/).length / 200))} Min.`;
-}
+import { BLOG_COPY, contentLanguage, formatLocalizedDate, readingMinutes } from '../../../lib/i18n';
 
 interface Props {
   posts: Campaign[];
   currentId: string;
+  language: string;
 }
 
-export function ArticleSidebar({ posts, currentId }: Props) {
+export function ArticleSidebar({ posts, currentId, language }: Props) {
   const others = posts.filter((p) => p.id !== currentId).slice(0, 5);
+  const copy = BLOG_COPY[contentLanguage(language)];
 
   if (others.length === 0) return null;
 
@@ -36,7 +26,7 @@ export function ArticleSidebar({ posts, currentId }: Props) {
             className="font-bold text-[15px]"
             style={{ fontFamily: 'var(--font-display)', color: 'var(--color-primary)' }}
           >
-            Weitere Artikel
+            {copy.moreArticles}
           </span>
         </div>
 
@@ -90,11 +80,11 @@ export function ArticleSidebar({ posts, currentId }: Props) {
                 </p>
                 <div className="flex items-center gap-2 mt-auto">
                   <time className="label-caps" style={{ color: 'var(--color-subtle)' }}>
-                    {formatDate(post.created_at)}
+                    {formatLocalizedDate(post.created_at, post.language, 'short')}
                   </time>
                   <span style={{ color: 'var(--color-border)', fontSize: 10 }}>·</span>
                   <span className="label-caps" style={{ color: 'var(--color-subtle)' }}>
-                    {readingTime(post.blog)}
+                    {readingMinutes(post.blog)} {BLOG_COPY[contentLanguage(post.language)].minutesRead}
                   </span>
                 </div>
               </div>

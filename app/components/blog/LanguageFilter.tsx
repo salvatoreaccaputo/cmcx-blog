@@ -3,6 +3,8 @@
 const LANG_LABELS: Record<string, string> = {
   de: 'Deutsch',
   en: 'English',
+  it: 'Italiano',
+  fr: 'Français',
 };
 
 interface Props {

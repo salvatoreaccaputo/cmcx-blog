@@ -1,4 +1,7 @@
 import type { ReactNode } from 'react';
+import { BLOG_COPY, contentLanguage } from '../../../lib/i18n';
+
+const FAQ_HEADING = /^## (FAQ|Häufig|Fragen|Domande|Questions)/i;
 
 /* ── Inline bold renderer ───────────────────────────────────── */
 function renderInline(text: string): ReactNode {
@@ -30,7 +33,7 @@ function parseBlocks(content: string): Block[] {
     const line = lines[i];
 
     /* FAQ section */
-    if (/^## (FAQ|Häufig|Fragen)/i.test(line)) {
+    if (FAQ_HEADING.test(line)) {
       i++;
       const items: { question: string; answer: string[] }[] = [];
       let currentQ: string | null = null;
@@ -38,7 +41,7 @@ function parseBlocks(content: string): Block[] {
 
       while (i < lines.length) {
         const l = lines[i];
-        if (l.startsWith('## ') && !/^## (FAQ|Häufig|Fragen)/i.test(l)) break;
+        if (l.startsWith('## ') && !FAQ_HEADING.test(l)) break;
         if (l.startsWith('### ')) {
           if (currentQ !== null) items.push({ question: currentQ, answer: currentA });
           currentQ = l.slice(4).trim();
@@ -76,8 +79,17 @@ function parseBlocks(content: string): Block[] {
 }
 
 /* ── Render ─────────────────────────────────────────────────── */
-export function BlogContent({ content, skipFirstH1 = true }: { content: string; skipFirstH1?: boolean }) {
+export function BlogContent({
+  content,
+  language,
+  skipFirstH1 = true,
+}: {
+  content: string;
+  language: string;
+  skipFirstH1?: boolean;
+}) {
   const blocks = parseBlocks(content);
+  const copy = BLOG_COPY[contentLanguage(language)];
   let firstH1Seen = false;
 
   return (
@@ -165,7 +177,7 @@ export function BlogContent({ content, skipFirstH1 = true }: { content: string; 
                     color: 'var(--color-secondary)',
                     marginBottom: 12,
                   }}>
-                    Zitat
+                    {copy.quote}
                   </p>
                   <blockquote style={{
                     margin: 0,
@@ -186,7 +198,7 @@ export function BlogContent({ content, skipFirstH1 = true }: { content: string; 
                       color: 'var(--color-muted)',
                     }}>
                       — {/^(transcript\s*speaker|speaker|unknown|unbekannt)$/i.test(author)
-                        ? 'Zitat aus Recherche'
+                        ? copy.researchQuote
                         : author}
                     </p>
                   )}
@@ -234,7 +246,7 @@ export function BlogContent({ content, skipFirstH1 = true }: { content: string; 
                   </span>
                   <span style={{ color: 'var(--color-border)', fontSize: 12 }}>·</span>
                   <span style={{ fontSize: 12, color: 'var(--color-muted)', fontFamily: 'var(--font-sans)' }}>
-                    {block.items.length} {block.items.length === 1 ? 'Frage' : 'Fragen'}
+                    {block.items.length} {block.items.length === 1 ? copy.question : copy.questions}
                   </span>
                 </div>
 

@@ -1,5 +1,7 @@
 'use client';
 
+import { BLOG_COPY, contentLanguage } from '../../../lib/i18n';
+
 const FALLBACK_IMAGE = '/expert-fallback.jpg';
 const FALLBACK_NAME = 'Prof. Dr. Content';
 const FALLBACK_TOPIC = 'Digitale Strategie';
@@ -8,11 +10,13 @@ interface ExpertCTAProps {
   expertName?: string | null;
   expertImageUrl?: string | null;
   topic: string;
+  language: string;
 }
 
-export function ExpertCTA({ expertName, expertImageUrl, topic }: ExpertCTAProps) {
+export function ExpertCTA({ expertName, expertImageUrl, topic, language }: ExpertCTAProps) {
   const rawName = expertName ?? FALLBACK_NAME;
   const imageUrl = expertImageUrl ?? FALLBACK_IMAGE;
+  const copy = BLOG_COPY[contentLanguage(language)];
 
   /* expertName may contain "Name\nShortTopic" — split and use both */
   const lines = rawName.split('\n').map((l) => l.trim()).filter(Boolean);
@@ -74,7 +78,7 @@ export function ExpertCTA({ expertName, expertImageUrl, topic }: ExpertCTAProps)
               marginBottom: 8,
             }}
           >
-            Sprechen Sie mit unserem Experten
+            {copy.expertIntro}
           </p>
           <p
             style={{
@@ -90,7 +94,7 @@ export function ExpertCTA({ expertName, expertImageUrl, topic }: ExpertCTAProps)
             {displayName}
           </p>
           <p style={{ fontSize: 16, color: 'var(--color-muted)', lineHeight: 1.5 }}>
-            Experte für <strong style={{ color: 'var(--color-secondary)' }}>{shortTopic}</strong>
+            {copy.expertFor} <strong style={{ color: 'var(--color-secondary)' }}>{shortTopic}</strong>
           </p>
         </div>
 
@@ -119,7 +123,7 @@ export function ExpertCTA({ expertName, expertImageUrl, topic }: ExpertCTAProps)
           <svg width="17" height="17" viewBox="0 0 14 14" fill="none">
             <path d="M7 1C4.239 1 2 3.239 2 6c0 1.398.55 2.665 1.44 3.6L2 12l2.4-1.44A4.978 4.978 0 0 0 7 11c2.761 0 5-2.239 5-5S9.761 1 7 1Z" stroke="white" strokeWidth="1.3" strokeLinejoin="round"/>
           </svg>
-          Jetzt anfragen
+          {copy.inquire}
         </a>
       </div>
     </div>
